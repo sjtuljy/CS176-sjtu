@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #cache {
+            margin-top: 50px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #cache > div {
+            width: 200px;
+            text-align: center;
+        }
+
+        #cache div img {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cache">
+        <div>
+            <img id="max-age" alt="max-age" src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2438244195,842080208&fm=26&gp=0.jpg"/>
+            <span>max-age=10</span>
+        </div>
+        <div>
+            <img id="no-store" alt="no-store" src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1079017452,4057026949&fm=26&gp=0.jpg"/>
+            <span>no-store</span>
+        </div>
+        <div>
+            <img id="no-cache" alt="no-cache" src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3102996229,4165718213&fm=26&gp=0.jpg"/>
+            <span>no-cache</span>
+        </div>
+    </div>
+</body>
+<script>
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const url = require('url');
+
+http
+    .createServer((req,resp) =>{
+        const path = url.parse(req.url,true).pathname;
+        const q = url.parse(req.url,true).query;
+        const key = Object.keys(q);
+        const filename = __dirname + path;
+        if(!fs.existsSync(filename)){
+            resp.statusCode = 404;
+            resp.end();
+            return
+        }
+        if(key.length != 0){
+            resp.setHeader('Cache-Control',q[key[0]]);
+        }
+        fs.createReadStream(filename).pipe(resp);
+    })
+    .listen(3000,()=>{
+        console.log('listening to 3000')
+    });
+</script>
+</html>

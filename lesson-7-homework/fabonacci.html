@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>fabonacci</title>
+    <link rel="stylesheet" href="fabonacci.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body>
+    <div><button type="button">start calc</button></div>
+
+    <div><input type="number" /></div>
+    <div class="log"></div>
+
+    <div class="stick"></div>
+
+    <script>
+       const btn = document.querySelector('button');
+const input = document.querySelector('input');
+
+btn.addEventListener('click', () => {
+  const n = Number(input.value);
+  print('Waiting...');
+  const now = Date.now();
+  const res = fibonacci2(n);
+  const costInMs = Date.now() - now;
+  print(`Result: ${res} in ${costInMs}ms`);
+});
+
+function fibonacci2(n) {
+  if(n<=2) {
+    return 1;
+  }
+  return fibonacci2(n - 1) + fibonacci2(n - 2);
+}
+
+const log = document.querySelector('.log');
+function print(str) {
+  log.innerText = str;
+}
+
+        
+    </script>
+</body>
+
+</html>
